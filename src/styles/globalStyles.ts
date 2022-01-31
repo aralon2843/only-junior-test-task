@@ -7,8 +7,9 @@ import HelveticaNeueRegularWoff2 from "../fonts/HelveticaNeue-Regular.woff2";
 import HelveticaNeueBoldTtf from "../fonts/HelveticaNeue-Bold.ttf";
 import HelveticaNeueBoldWoff from "../fonts/HelveticaNeue-Bold.woff";
 import HelveticaNeueBoldWoff2 from "../fonts/HelveticaNeue-Bold.woff2";
+import { ThemeType } from "./theme";
 
-const GlobalStyles = createGlobalStyle`
+const GlobalStyles = createGlobalStyle<{ theme: ThemeType }>`
   @font-face {
     font-family: 'Helvetica Neue';
     src: local('Gilroy'), url(${HelveticaNeueRegularWoff}) format('woff'),url(${HelveticaNeueRegularWoff2}) format('woff2'),url(${HelveticaNeueRegularTtf}) format('truetype');
@@ -35,12 +36,16 @@ const GlobalStyles = createGlobalStyle`
   }
   body {
     font-family: "Helvetica Neue";
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 400;
+    background-color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.mainBlack};
   }
   form, button, input, textarea {
     font-family: inherit;
     font-size: inherit;
+    outline: none;
+    border: none;
   }
   * {
     margin: 0px;

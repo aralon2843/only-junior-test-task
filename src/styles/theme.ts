@@ -4,7 +4,6 @@ const theme = {
     black: "#000000",
 
     grey: "#F5F5F5",
-    lightGrey: "#E5E5E5",
 
     mainBlack: "#1F1F1F",
     secondaryBlack: "#232323",
@@ -18,5 +17,7 @@ const theme = {
     semiLightRed: "#FFC8C8",
   },
 };
+
+export type ThemeType = typeof theme;
 
 export default theme;
