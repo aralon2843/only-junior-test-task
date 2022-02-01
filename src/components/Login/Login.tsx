@@ -16,7 +16,15 @@ import {
   SubmitButton,
 } from "./Login.styles";
 
+import {
+  LoginResponseError,
+  LoginResponseSuccess,
+} from "../../interfaces/Login";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import loginErrorIcon from "../../assets/LoginError.svg";
+import recktangle from "../../assets/Recktangle.svg";
 
 interface ILoginInputs {
   login: string;
@@ -24,14 +32,53 @@ interface ILoginInputs {
   remember?: boolean;
 }
 
-const Login: React.FC = (): JSX.Element => {
+interface ILoginProps {
+  loginFetching: () => void;
+  loginSuccess: (login: string) => void;
+  loginError: (error: string) => void;
+
+  login: string;
+  error: string;
+  isLoading: boolean;
+}
+
+const Login: React.FC<ILoginProps> = ({
+  loginFetching,
+  loginSuccess,
+  loginError,
+
+  login,
+  error,
+  isLoading,
+}): JSX.Element => {
+  const navigate = useNavigate();
+
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<ILoginInputs>();
 
-  const onSubmitHandler: SubmitHandler<ILoginInputs> = async (data) => {};
+  const onSubmitHandler: SubmitHandler<ILoginInputs> = async (data) => {
+    loginFetching();
+
+    const response = await fakeLogin(data);
+    if (response.status === 200) {
+      localStorage.setItem("jwt", (response as LoginResponseSuccess).jwt);
+      localStorage.setItem("login", (response as LoginResponseSuccess).login);
+      loginSuccess((response as LoginResponseSuccess).login);
+    } else {
+      loginError((response as LoginResponseError).error);
+    }
+  };
+
+  useEffect(() => {
+    const isLoggedIn =
+      localStorage.getItem("jwt") && localStorage.getItem("login");
+    if (isLoggedIn) {
+      navigate("/profile");
+    }
+  }, [login, navigate]);
 
   return (
     <>
@@ -39,11 +86,9 @@ const Login: React.FC = (): JSX.Element => {
       <LoginWrapper>
         <LoginForm onSubmit={handleSubmit(onSubmitHandler)}>
           <InputWrapper>
-            {true && (
+            {error && (
               <LoginError>
-                <LoginErrorLabel icon={loginErrorIcon}>
-                  Пользователя aralon не существует
-                </LoginErrorLabel>
+                <LoginErrorLabel icon={loginErrorIcon}>{error}</LoginErrorLabel>
               </LoginError>
             )}
             <InputLabel>Логин</InputLabel>
@@ -77,6 +122,7 @@ const Login: React.FC = (): JSX.Element => {
             <RememberCheckbox
               type="checkbox"
               id="rememberCheckbox"
+              icon={recktangle}
               {...register("remember")}
             />
             <RememberLabel htmlFor="rememberCheckbox">
@@ -84,7 +130,7 @@ const Login: React.FC = (): JSX.Element => {
             </RememberLabel>
           </RememberWrapper>
 
-          <SubmitButton>Войти</SubmitButton>
+          <SubmitButton disabled={isLoading}>Войти</SubmitButton>
         </LoginForm>
       </LoginWrapper>
     </>

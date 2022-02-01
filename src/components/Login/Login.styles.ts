@@ -56,11 +56,11 @@ export const InputLabel = styled.label`
 export const Input = styled.input<{ error: boolean }>`
   background-color: ${({ theme }) => theme.colors.grey};
   padding: 20px;
-  color: ${({ theme }) => theme.colors.secondaryBlack};
+  color: ${({ error, theme }) =>
+    error ? theme.colors.mainRed : theme.colors.secondaryBlack};
   border-radius: 8px;
   border: ${({ error, theme }) =>
     error ? `1px solid ${theme.colors.mainRed}` : "none"};
-  /* transition: 0.3s ease all; */
 `;
 
 export const InputError = styled.p`
@@ -76,9 +76,30 @@ export const RememberWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-export const RememberCheckbox = styled.input`
-  margin-right: 14px;
+export const RememberCheckbox = styled.input<{ icon: string }>`
   cursor: pointer;
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+
+  & + label {
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+  & + label::before {
+    content: "";
+    border: 1px solid ${({ theme }) => theme.colors.black};
+    border-radius: 4px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 14px;
+  }
+  &:checked + label::before {
+    border: 1px solid ${({ theme }) => theme.colors.black};
+    background: url(${({ icon }) => icon}) center no-repeat;
+  }
 `;
 
 export const RememberLabel = styled.label`
@@ -90,7 +111,14 @@ export const SubmitButton = styled.button`
   color: ${({ theme }) => theme.colors.white};
   padding: 19px 0;
   text-align: center;
+  font-weight: 700;
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s ease opacity;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
