@@ -54,10 +54,10 @@ const App: React.FC = (): JSX.Element => {
   useEffect(() => {
     const login = localStorage.getItem("login");
     if (login) {
-      setState({
+      setState((state) => ({
         ...state,
         login,
-      });
+      }));
       navigate("/profile");
     } else {
       navigate("/login");
