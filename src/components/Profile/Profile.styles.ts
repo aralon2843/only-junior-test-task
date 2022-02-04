@@ -17,6 +17,10 @@ export const Greetings = styled.p`
   span {
     font-weight: 700;
   }
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 `;
 
 export const ExitButton = styled.button`
