@@ -11,6 +11,7 @@ const theme = {
     blue: "#4A67FF",
 
     mainRed: "#E26F6F",
+    lightRed: "#F5E9E9",
     secondaryRed: "#EE6565",
   },
 };
